@@ -1,0 +1,14 @@
+.purchased-items {
+    height: 490px;
+    overflow: auto;
+}
+.messages {
+    vertical-align: middle;
+    padding: 20px 0px 20px 0px;
+    height: 20px;
+}
+
+.active, .jumbotron:hover {
+    background-color: #72caff !important;
+    border-color: #72caff !important;
+}
