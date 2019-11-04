@@ -113,3 +113,12 @@ function getItemFromInventory(item) {
         case gingerAle.name: return gingerAle;
     }
 }
+
+$('#cocaCola').text(cocaCola.name);
+$('#paper').text(drPaper.name);
+$('#fanta').text(fanta.name);
+$('#dietCoke').text(dietCoke.name);
+$('#sprite').text(sprite.name);
+$('#gingerAle').text(gingerAle.name)
+$('#insertCoin').text('Insert Coin');
+$('#returnCoin').text('Return Coin');
