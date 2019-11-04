@@ -77,9 +77,13 @@ $('#insertCoin').on('click', function () {
 });
 
 $('#returnCoin').on('click', function () {
-    hasQuarter = false;
-    removeMessageClasses();
-    $('#message').addClass('alert alert-warning').text('Coin Returned');
+    if (hasQuarter) {
+        hasQuarter = false;
+        removeMessageClasses();
+        $('#message').addClass('alert alert-warning').text('Coin Returned');
+    } else {
+        $('#message').addClass('alert alert-warning').text('Soda dispense for inserted coin');
+    }
 });
 
 function removeMessageClasses() {
