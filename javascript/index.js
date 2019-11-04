@@ -1,22 +1,23 @@
 var UL = $('.list-group');
 
-var hasQuarter = false;
+var insertedCoinCount = 0;
 
 function machineItems(options){
     var options = options || {};
     this.name = options.name || "Soda";
-    this.count = options.count || 100;
+    this.count = options.count || 10;
     this.decrease = options.decrease || 1;
-    this.dispense = function(){
-        this.count -= this.decrease;
-        if (this.count < 0){
+    this.cost = options.cost || 5;
+    this.dispense = function() {
+        if (this.count < 0) {
             $('#message').addClass('alert alert-warning');
             $('#message').text('No quarter');
         } else {
-            hasQuarter = false;
+            this.count -= this.decrease;
+            insertedCoinCount -= this.cost;
             removeMessageClasses();
             $('#message').addClass('alert alert-success');
-            $('#message').text('Please collect your ' + this.name + '. Thank you for using our services!')
+            $('#message').text('Please collect your ' + this.name + '. Thank you for using our services! Current balance is ' + insertedCoinCount)
             UL.append('<li class="list-group-item">' + this.name + '</li>');
         }
     }
@@ -25,64 +26,76 @@ function machineItems(options){
 var cocaCola = new machineItems({
     name:"Coca-Cola",
     count:10,
-    decrease:1
+    decrease:1,
+    cost:20
 });
 
 var dietCoke = new machineItems({
     name:"Diet Coke",
     count:10,
-    decrease:1
+    decrease:1,
+    cost:15
 });
 
 var drPaper = new machineItems({
     name:"Dr. Paper",
     count:10,
-    decrease:1
+    decrease:1,
+    cost:10
 });
 
 var sprite = new machineItems({
     name:"Sprite",
     count:10,
-    decrease:1
+    decrease:1,
+    cost:25
 });
 
 var fanta = new machineItems({
     name:"Fanta",
     count:10,
-    decrease:1
+    decrease:1,
+    cost:8
 });
 
 var gingerAle = new machineItems({
     name:"Ginger Ale",
     count:10,
-    decrease:1
+    decrease:1,
+    cost:15
 });
 
 var selectedInventoryItem = cocaCola;
 
 $('.buttons').on('click', '.jumbotron', function() {
-    if (hasQuarter) {
         selectedInventoryItem = getItemFromInventory($(this).text());
-        selectedInventoryItem.dispense();
-    } else {
-        removeMessageClasses();
-        $('#message').addClass('alert alert-danger').text('Please insert coin');
-    }
+        console.log(insertedCoinCount + "  " + selectedInventoryItem.cost);
+        if (insertedCoinCount >= selectedInventoryItem.cost) {
+            selectedInventoryItem.dispense();
+        } else if (insertedCoinCount < selectedInventoryItem.cost) {
+            removeMessageClasses();
+            $('#message').addClass('alert alert-warning').text('Please insert ' + (selectedInventoryItem.cost - insertedCoinCount) + ' coins for ' + selectedInventoryItem.name);
+        } else if (insertedCoinCount == 0) {
+            removeMessageClasses();
+            $('#message').addClass('alert alert-danger').text('Please insert coin');
+        }
 });
 
 $('#insertCoin').on('click', function () {
-    hasQuarter = true;
+    insertedCoinCount += parseInt($('#sodaPrice').val());
     removeMessageClasses();
-    $('#message').addClass('alert alert-warning').text('Coin inserted');
+    $('#message').addClass('alert alert-warning').text(insertedCoinCount + ' coins inserted');
 });
 
 $('#returnCoin').on('click', function () {
-    if (hasQuarter) {
-        hasQuarter = false;
+    if (parseInt($('#sodaPrice').val()) > insertedCoinCount) {
+        $('#message').addClass('alert alert-danger').text('Less balance to withdraw coins.');
+    } else if (insertedCoinCount >= parseInt($('#sodaPrice').val())) {
+        insertedCoinCount = insertedCoinCount - parseInt($('#sodaPrice').val());
         removeMessageClasses();
-        $('#message').addClass('alert alert-warning').text('Coin Returned');
+        $('#message').addClass('alert alert-warning').text(parseInt($('#sodaPrice').val()) + ' coin returned');
     } else {
-        $('#message').addClass('alert alert-warning').text('Soda dispense for inserted coin');
+        $('#message').addClass('alert alert-danger').text('Please insert coin');
     }
 });
 
